@@ -9,7 +9,7 @@ export default async function saveExpense(amount, category, description, currenc
     // Post
         await axios.post("https://api.airtable.com/v0/appAiKFCZoMyS4jBV/table1",{
                     "fields": {
-                    "id":  Math.floor(Math.random() * 100),
+                    "id":  phoneId,
                     "amount": amount,
                     "category": category,
                     "description": description,

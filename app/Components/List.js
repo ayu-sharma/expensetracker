@@ -74,7 +74,7 @@ const [open, setIsOpen] = useState("false")
         </div>
         {/* <button className="bg-slate-600" onClick={handleDelete}>v</button> */}
        <button className="" onClick={()=>handleDelete(task.id)} >Delete</button>
-       <button className="" onClick={()=>handleUpdate(task.id)} >Update</button>
+       {/* <button className="" onClick={()=>handleUpdate(task.id)} >Update</button> */}
        {/* {console.log(props.)} */}
        {/* {console.log(task.id)} */}
       </div>

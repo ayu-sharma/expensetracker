@@ -5,7 +5,6 @@ import { useState } from "react";
 import Button from "./Button";
 import saveExpense from "../api/airtable-api";
 import { MdOutlineKeyboardBackspace } from "react-icons/md";
-import { useRouter } from 'next/router';
 // import { v4 as uuidv4 } from 'uuid';
 
 
@@ -16,7 +15,6 @@ function AddTask(props) {
     selectedCat: "Category",
     description: "",
   });
-  const router = useRouter();
 
   function inputChange(e) {
     const { name, value } = e.target;
@@ -30,8 +28,7 @@ function AddTask(props) {
   }
 
    async function saveChange() {
-    await saveExpense(parseInt(data.amount),data.selectedCat, data.description, data.moneySymbol, props.phoneId )
-    router.push('/success');
+    await saveExpense(parseInt(data.amount),data.selectedCat, data.description, data.moneySymbol )
     // props.setNewData([...props.newData ,data]);
     // setData({
     //   moneySymbol: "₹",
@@ -41,6 +38,7 @@ function AddTask(props) {
     // });
     // console.log(data);
     props.onButtonClick();
+    
   }
   // const saveImageToDatabase = async(amount, category, description) => {
   //   const resp = await saveExpense(amount, category, description)

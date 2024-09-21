@@ -11,6 +11,7 @@
   "dependencies": {
     "airtable": "^0.12.2",
     "axios": "^1.6.5",
+    "i": "^0.3.7",
     "next": "14.0.4",
     "next-auth": "^4.24.7",
     "react": "^18",

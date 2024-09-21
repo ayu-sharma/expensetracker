@@ -1,20 +1,13 @@
 "use client";
 import React, { useEffect } from "react";
 import Image from "next/image";
-import { useState } from "react";
 import Button from "./Button";
 import saveExpense from "../api/airtable-api";
 import { MdOutlineKeyboardBackspace } from "react-icons/md";
-// import { v4 as uuidv4 } from 'uuid';
 
 
-function AddTask(props) {
-  const [data, setData] = useState({
-    moneySymbol: "₹",
-    amount: null,
-    selectedCat: "Category",
-    description: "",
-  });
+function AddTask({setIsUpdating, setSelectedTaskId, onButtonClick, handleDelete, selectedData, setActive, data, setData, isUpdating, selectedTaskId }) {
+
 
   function inputChange(e) {
     const { name, value } = e.target;
@@ -22,38 +15,46 @@ function AddTask(props) {
     // console.log(data);
   }
 
-  const backButton= () => {
+  const backButton = () => {
     // console.log('...')
-    props.setActive(false)
+    setActive(false)
+    setData({
+      currencySymbol: "₹",
+      amount: null,
+      category: "Category",
+      description: "",
+    });
   }
 
-   async function saveChange() {
-    await saveExpense(parseInt(data.amount),data.selectedCat, data.description, data.moneySymbol )
-    // props.setNewData([...props.newData ,data]);
-    // setData({
-    //   moneySymbol: "₹",
-    //   amount: null,
-    //   selectedcat: "Category",
-    //   description: "",
-    // });
-    // console.log(data);
-    props.onButtonClick();
-    
+  async function saveChange() {
+    if (isUpdating) {
+      if (data.amount !== selectedData.amount || data.category !== selectedData.category || data.currencySymbol !== selectedData.currencySymbol || data.description !== selectedData.description) {
+        // console.log("this is selecteddata", selectedData);
+        // console.log("this is data", data)
+        // console.log("this is deleted", handleDelete)
+        await handleDelete(selectedTaskId)
+        await saveExpense(parseInt(data.amount), data.category, data.description, data.currencySymbol)
+      }
+    }
+    else {
+      await saveExpense(parseInt(data.amount), data.category, data.description, data.currencySymbol)
+    }
+    onButtonClick();
+    setData({
+      currencySymbol: "₹",
+      amount: null,
+      category: "Category",
+      description: ""
+    });
+    setIsUpdating(false)
+    setSelectedTaskId(null)
   }
-  // const saveImageToDatabase = async(amount, category, description) => {
-  //   const resp = await saveExpense(amount, category, description)
-  //   console.log(resp);
-  // } 
 
-  // useEffect(()=>{
-    
-  // }, []
-  // )
 
   return (
     <div className="bg-gradient-to-b from-[#4A00E0] to-[#8E2DE2] min-h-screen">
       <div className="pt-3 pb-4">
-      <Image
+        <Image
           className="absolute left-2 stroke[20px] cursor-pointer sm:hidden"
           src="/back-arrow(white).svg"
           width={20}
@@ -66,20 +67,12 @@ function AddTask(props) {
       </div>
 
       <div className="fixed bottom-0 w-full sm:static sm:flex sm:flex-col sm:item-center sm:justify-center sm:max-w-lg sm:mx-auto sm:bg-slate-50 sm:rounded-3xl sm:pt-5">
-      <div
+        <div
           className="px-4 stroke[20px] hidden sm:block"
           onClick={backButton}
-          >
-          < MdOutlineKeyboardBackspace className=" hover:opacity-[50%] cursor-pointer"/>
-         </div>
-
-  {/* <Image
-          className="px-4 stroke[20px] cursor-pointer hidden sm:block hover:opacity-[50%]"
-          src="/back-arrow(black).svg"
-          width={20}
-          height={20}
-          onClick={backButton}
-        /> */}
+        >
+          < MdOutlineKeyboardBackspace className=" hover:opacity-[50%] cursor-pointer" />
+        </div>
 
         <div className="px-4 py-3">
           <p className="text-[#FCFCFC] sm:text-black font-semibold leading-5 text-lg sm:text-2xl">
@@ -90,23 +83,23 @@ function AddTask(props) {
           <div className="flex items-center pt-3 sm:pt-4 sm:justify-center">
             {/* Amount denotation */}
             <div className="pr-1 font-semibold text-white sm:text-black leading-5 text-xl sm:text-3xl">
-            <form>
-            <select
-              className=" py-4 rounded-2xl w-full border-2"
-              name="moneySymbol"
-              id="moneySymbol"
-              autoComplete="off"
-              value={data.moneySymbol}
-              onChange={inputChange}
-              style={{background: "none", outline:"none", border: "none"}}
-            >
-              <option value="₹">₹</option>
-              <option value="€">€</option>
-              <option value="£">£</option>
-              <option value="$">$</option>
-              <option value="K">K</option>
-            </select>
-          </form>
+              <form>
+                <select
+                  className=" py-4 rounded-2xl w-full border-2"
+                  name="currencySymbol"
+                  id="currencySymbol"
+                  autoComplete="off"
+                  value={data.currencySymbol}
+                  onChange={inputChange}
+                  style={{ background: "none", outline: "none", border: "none" }}
+                >
+                  <option value="₹">₹</option>
+                  <option value="€">€</option>
+                  <option value="£">£</option>
+                  <option value="$">$</option>
+                  <option value="K">K</option>
+                </select>
+              </form>
             </div>
             <form>
               <input
@@ -118,7 +111,7 @@ function AddTask(props) {
                 autoComplete="off"
                 value={data.amount}
                 onChange={inputChange}
-                style={{background: "none", outline:"none", border: "none", width: "100px"}}
+                style={{ background: "none", outline: "none", border: "none", width: "100px" }}
               />
             </form>
           </div>
@@ -130,10 +123,10 @@ function AddTask(props) {
           <form>
             <select
               className="px-3 py-4 rounded-2xl w-full border-2"
-              name="selectedCat"
-              id="selectedCat"
+              name="category"
+              id="category"
               autoComplete="off"
-              value={data.selectedCat}
+              value={data.category}
               onChange={inputChange}
             >
               <option value="Category" disabled>
@@ -167,8 +160,13 @@ function AddTask(props) {
 
           {/* Save Button */}
           <div className="">
-          <Button className={`w-full ${data.amount=== " " || data.selectedCat === "Category" ? "opacity-[50%]" : "opacity-[100%]"  }`} onClick={saveChange} disabled={data.amount=== " " || data.selectedCat === "Category"} text={"Save"} />
-        </div>
+            <Button
+              className={`w-full ${data.amount === "" || data.category === "Category" ? "opacity-[50%]" : "opacity-[100%]"}`}
+              onClick={saveChange}
+              disabled={data.amount === "" || data.category === "Category"}
+              text={isUpdating ? "Update" : "Save"} // Dynamically change text
+            />
+          </div>
         </div>
       </div>
     </div>

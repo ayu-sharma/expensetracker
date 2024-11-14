@@ -132,7 +132,7 @@ function AddTask({setIsUpdating, setSelectedTaskId, onButtonClick, handleDelete,
               <option value="Category" disabled>
                 Category
               </option>
-              <option value="Shopping">Housing</option>
+              <option value="Housing">Housing</option>
               <option value="Food">Food</option>
               <option value="Utilities">Utilities</option>
               <option value="Insurance">Insurance </option>

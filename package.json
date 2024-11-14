@@ -9,6 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
+    "@mui/icons-material": "^6.1.7",
+    "@mui/material": "^6.1.7",
+    "@mui/styled-engine-sc": "^6.1.7",
     "airtable": "^0.12.2",
     "axios": "^1.6.5",
     "i": "^0.3.7",
@@ -18,6 +23,8 @@
     "react": "^18",
     "react-dom": "^18",
     "react-icons": "^5.0.1",
+    "react-spinners": "^0.14.1",
+    "styled-components": "^6.1.13",
     "uuid": "^9.0.1"
   },
   "devDependencies": {

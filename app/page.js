@@ -1,11 +1,11 @@
 "use client";
 import React, { useState } from "react";
 import AddTask from "./Components/Addtask";
-import List from "./Components/List";
+import ListCmp from "./Components/List";
 import { useEffect } from "react";
 import { addFromApi } from "./api/airtable-api";
 import { delteFromApi } from "./api/airtable-api";
-
+import Spinner from "./Components/Spinner";
 
 function App() {
   const [newData, setNewData] = useState([]);
@@ -19,7 +19,7 @@ function App() {
   const [isUpdating, setIsUpdating] = useState(false)
   const [selectedData, setSelectedData] = useState()
   const [selectedTaskId, setSelectedTaskId] = useState()
-
+  const [loading, setLoading] = useState(false)
   const handleButtonClick = () => {
     setActive(!active);
   };
@@ -27,10 +27,12 @@ function App() {
 
 
   const getData = async () => {
+    setLoading(true)
     const resp = await addFromApi()
-    // console.log("this is response", resp)
     setNewData(resp.data)
+    setLoading(false)
   }
+  console.log("this is loading",loading)
   const handleUpdate = (recordId) => {
     const selectedData = newData.find(record => record._id === recordId);
     setSelectedData(selectedData)
@@ -64,8 +66,10 @@ function App() {
     getData();
   }, [active])
   return (
-    <div className=" min-h-screen">
-      {active ? (
+    <div className="min-h-screen">
+      {loading ? (
+        <Spinner />
+      ) : active ? (
         <AddTask
           newData={newData}
           setNewData={setNewData}
@@ -83,21 +87,20 @@ function App() {
           setSelectedTaskId={setSelectedTaskId}
         />
       ) : (
-        <div className="">
-          <List
-            newData={newData}
-            setNewData={setNewData}
-            onButtonClick={handleButtonClick}
-            active={active}
-            setActive={setActive}
-            data={data}
-            setData={setData}
-            handleUpdate={handleUpdate}
-            handleDelete={handleDelete}
-          />
-        </div>
+        <ListCmp
+          newData={newData}
+          setNewData={setNewData}
+          onButtonClick={handleButtonClick}
+          active={active}
+          setActive={setActive}
+          data={data}
+          setData={setData}
+          handleUpdate={handleUpdate}
+          handleDelete={handleDelete}
+        />
       )}
     </div>
+    
   );
 }
 
